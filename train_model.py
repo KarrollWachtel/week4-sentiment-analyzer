@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 
 import joblib
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 from sentiment_analyzer import build_pipeline
 
@@ -33,7 +33,10 @@ def main() -> None:
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, MODEL_PATH)
 
+    labels = ["negative", "positive"]
     print(f"Test accuracy: {accuracy_score(test_labels, predictions):.3f}")
+    print("Confusion matrix (rows=true, columns=predicted):")
+    print(confusion_matrix(test_labels, predictions, labels=labels))
     print(classification_report(test_labels, predictions, zero_division=0))
     print(f"Saved model to {MODEL_PATH.relative_to(PROJECT_ROOT)}")
 

@@ -16,62 +16,89 @@ class ChallengeExample:
 
 
 EXAMPLES = (
-    ChallengeExample("negation", "The movie was not good.", "negative"),
+    ChallengeExample("negation", "The acting was not good.", "negative"),
+    ChallengeExample("negation", "I wasn't impressed by the performance.", "negative"),
+    ChallengeExample("negation", "This isn't a film I'd recommend.", "negative"),
+    ChallengeExample("negation", "The plot was not engaging at all.", "negative"),
     ChallengeExample("negation", "The camera quality is not bad at all.", "positive"),
-    ChallengeExample("negation", "I can't say I didn't enjoy this film.", "positive"),
-    ChallengeExample("negation", "I expected to hate this, but I don't.", "positive"),
     ChallengeExample(
         "sarcasm",
-        "What a brilliant idea to put the only exit behind the broken door.",
+        "Oh wonderful, another two hours I'll never get back.",
         "negative",
     ),
     ChallengeExample(
         "sarcasm",
-        "The service was so fast that I grew old waiting for dessert.",
+        "Fantastic, the elevator was broken and the Wi‑Fi failed again.",
         "negative",
     ),
     ChallengeExample(
         "sarcasm",
-        "The soundtrack was delightful if you enjoy nails on a chalkboard.",
+        "Great, my phone battery died in under an hour.",
         "negative",
     ),
     ChallengeExample(
         "sarcasm",
-        "Perfect, another update that deleted all my saved files.",
+        "Lovely, the train was delayed and then cancelled.",
         "negative",
     ),
-    ChallengeExample("idiom", "This phone is a steal at this price.", "positive"),
-    ChallengeExample("idiom", "The ending fell flat.", "negative"),
     ChallengeExample(
-        "idiom", "The plot kept me on the edge of my seat.", "positive"
-    ),
-    ChallengeExample(
-        "idiom",
-        "The customer support left a bad taste in my mouth.",
-        "negative",
-    ),
-    ChallengeExample("slang", "This movie absolutely slaps.", "positive"),
-    ChallengeExample("slang", "The food was mid at best.", "negative"),
-    ChallengeExample("slang", "That laptop is fire.", "positive"),
-    ChallengeExample("slang", "The hotel staff were rude as hell.", "negative"),
-    ChallengeExample(
-        "mixed_sentiment",
-        "The acting was excellent, but the story was a complete mess.",
+        "sarcasm",
+        "Perfect, I got charged extra for a service I never asked for.",
         "negative",
     ),
     ChallengeExample(
         "mixed_sentiment",
-        "The first half drags, but the finale is brilliant.",
+        "Beautiful cinematography, completely wasted on a terrible script.",
+        "negative",
+    ),
+    ChallengeExample(
+        "mixed_sentiment",
+        "The cast was excellent, but the ending collapsed into nonsense.",
+        "negative",
+    ),
+    ChallengeExample(
+        "mixed_sentiment",
+        "The room was spotless, but the staff were rude and dismissive.",
+        "negative",
+    ),
+    ChallengeExample(
+        "mixed_sentiment",
+        "The soundtrack was stunning, and the final scene was perfect.",
         "positive",
     ),
     ChallengeExample(
         "mixed_sentiment",
-        "The interface is beautiful, but the app crashes constantly.",
+        "The food was disappointing, but the desserts were unforgettable.",
+        "positive",
+    ),
+    ChallengeExample("intensity", "It was fine.", "positive"),
+    ChallengeExample("intensity", "It was okay.", "positive"),
+    ChallengeExample("intensity", "It was good.", "positive"),
+    ChallengeExample("intensity", "It was excellent.", "positive"),
+    ChallengeExample("intensity", "It was extraordinary.", "positive"),
+    ChallengeExample(
+        "domain_shift",
+        "This coffee grinder is sturdy and quiet, and it makes a perfect espresso.",
+        "positive",
+    ),
+    ChallengeExample(
+        "domain_shift",
+        "The blender leaked on the first use and the motor smelled burnt.",
         "negative",
     ),
     ChallengeExample(
-        "mixed_sentiment",
-        "The room was tiny, but the location was perfect.",
+        "domain_shift",
+        "The tacos were fresh, flavorful, and worth every bite.",
+        "positive",
+    ),
+    ChallengeExample(
+        "domain_shift",
+        "The hotel room smelled musty and the shower was freezing cold.",
+        "negative",
+    ),
+    ChallengeExample(
+        "domain_shift",
+        "The wireless keyboard feels premium and responsive for daily use.",
         "positive",
     ),
 )
@@ -97,9 +124,19 @@ def main() -> None:
         )
 
     print("\nAccuracy by challenge category:")
-    for category, results in sorted(category_results.items()):
-        print(f"{category}: {sum(results)}/{len(results)}")
-    print(f"Overall: {sum(map(sum, category_results.values()))}/{len(EXAMPLES)}")
+    for category in [
+        "negation",
+        "sarcasm",
+        "mixed_sentiment",
+        "intensity",
+        "domain_shift",
+    ]:
+        results = category_results[category]
+        accuracy = sum(results) / len(results) if results else 0.0
+        print(f"{category}: {sum(results)}/{len(results)} ({accuracy:.2%})")
+
+    overall_correct = sum(sum(results) for results in category_results.values())
+    print(f"Overall: {overall_correct}/{len(EXAMPLES)} ({overall_correct / len(EXAMPLES):.2%})")
 
 
 if __name__ == "__main__":
